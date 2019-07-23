@@ -1,0 +1,118 @@
+{% extends "Store/base.html" %}
+
+{% block title %}
+    商品列表页
+{% endblock %}
+
+{% block label %}
+    <a href="/Store/add_goods/" class="btn btn-warning">添加商品</a>
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>商品名称</th>
+                <th>商品价格</th>
+                <th>商品数量</th>
+                <th>出厂日期</th>
+                <th>保质期(天)</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for goods in page %}
+                <tr>
+                    <td>{{ goods.goods_name }}</td>
+                    <td>
+                        <input type="text" value="{{ goods.goods_price }}">
+                    </td>
+                    <td>{{ goods.goods_number }}</td>
+                    <td>{{ goods.goods_date|date:"Y-m-d" }}</td>
+                    <td>{{ goods.goods_safeDate }}</td>
+                    <td>
+                        <a href="#" class="btn btn-danger">下架</a>
+                        <a href="#" class="btn btn-primary">销毁</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{#    显示页码#}
+{#    <div class="dataTables_paginate paging-simple-numbers">#}
+{#        <ul class="pagination">#}
+{#            {% for p in page_range %}#}
+{#            <li class="paginate-button page-item">#}
+{#                <a class="page-link" href="?keywords={{ keywords }}&page_num={{ p }}">{{ p }}</a>#}
+{#            </li>#}
+{#            {% endfor %}#}
+{#        </ul>#}
+{#    </div>#}
+
+<div class="row">
+    <div class="col-sm-12 col-md-5">
+        <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
+            Showing {{ page_num }} to {{ total_page }} of {{ total_num }} entries
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-7">
+        <div class="dataTables_paginate paging-simple-numbers">
+            <ul class="pagination">
+                <!--如果有上一页-->
+                {% if pre_page %}
+                    <li class="paginate_button page-item previous" id="dataTable_previous">
+                        <a href="?keywords={{ keywords }}&page_num={{ pre_page }}" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">上一页</a>
+                    </li>
+                <!--如果已经是第一页了-->
+                {% else %}
+                    <li class="paginate_button page-item previous disabled" id="dataTable_previous">
+                        <a href="?keywords={{ keywords }}&page_num={{ pre_page }}" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">上一页</a>
+                    </li>
+                {% endif %}
+
+                <!--循环显示页数-->
+                {% for p in page_range %}
+                    <li class="paginate_button page-item">
+                        <a class="page-link" href="?keywords={{ keywords }}&page_num={{ p }}">{{ p }}</a>
+                    </li>
+                {% endfor %}
+
+                <!--下一页-->
+                {% if next_page %}
+                    <li class="paginate_button page-item next" id="dataTable_next">
+                        <a href="?keywords={{ keywords }}&page_num={{ next_page }}" aria-controls="dataTable" data-dt-idx="7" tabindex="0" class="page-link">下一页</a>
+                    </li>
+                {% else %}
+                    <li class="paginate_button page-item next disabled" id="dataTable_next">
+                    <a href="?keywords={{ keywords }}&page_num={{ next_page }}" aria-controls="dataTable" data-dt-idx="7" tabindex="0" class="page-link">下一页</a>
+                    </li>
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

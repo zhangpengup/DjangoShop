@@ -7,9 +7,12 @@ urlpatterns = [
     path('login/',login),
     path('index/',index),
     path('logout/',logout),
-    path('base/',base),
-    path('nf/',notfound),
-    path('blank/',blank),
+    path('au/',ajax_user),
+    path('rs/',register_store),
+    path('add_goods/',add_goods),
+    path('list_goods/',list_goods),
+
+
 
     re_path('^$',index),
 ]

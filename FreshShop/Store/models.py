@@ -13,7 +13,7 @@ class Seller(models.Model):
 
 class StoreType(models.Model):
     store_type = models.CharField(max_length=32,verbose_name="类型名称")
-    store_address = models.TextField(verbose_name="类型描述")
+    store_description = models.TextField(verbose_name="类型描述")
 
 class Store(models.Model):
     store_name = models.CharField(max_length=32,verbose_name="店铺名称")

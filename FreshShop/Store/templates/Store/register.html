@@ -47,11 +47,14 @@
                 <div class="form-group">
                   <input type="text" class="form-control form-control-user" name="username" id="username" placeholder="用户名">
                 </div>
+                  <div class="form-group">
+                    <strong><span id="message" style="color: red;"></span></strong>
+                  </div>
                 <div class="form-group">
                   <input type="password" class="form-control form-control-user" name="password" id="password" placeholder="密码">
                 </div>
                 <div class="form-group">
-                  <input type="submit" class="btn btn-primary btn-user btn-block" value="注册">
+                  <input type="submit" class="btn btn-primary btn-user btn-block" id="submit" value="注册">
                 </div>
 
 {#                <div class="form-group row">#}
@@ -80,6 +83,9 @@
               <div class="text-center">
                 <a class="small" href="/Store/login">已有账号? 去登录!</a>
               </div>
+              <div class="text-center">
+
+              </div>
             </div>
           </div>
         </div>
@@ -97,6 +103,40 @@
 
   <!-- Custom scripts for all pages-->
   <script src="/static/Store/js/sb-admin-2.min.js"></script>
+
+  <!--导入jquery-->
+  <script src="/static/Store/js/jquery.min.js"></script>
+
+  <!--ajax前端校验-->
+  <script>
+      $("#username").blur(
+          function () {
+              var username = $("#username").val();
+              var url = "/Store/au/?username="+username;
+              $.ajax({
+                  url: url,
+                  type: "get",
+                  data: "",
+                  success:function (data) {
+                      console.log(data);
+                      $("#message").text(data.content);
+                      var state = data.state;
+                      if (state == "error"){
+                          $("#submit").attr("disabled",true);
+                      }else {
+                          $("#submit").attr("disabled",false);
+                      }
+
+                  },
+                  error:function (error) {
+                      console.log(error)
+                  }
+              }
+              )
+          }
+      )
+  </script>
+
 
 </body>
 
