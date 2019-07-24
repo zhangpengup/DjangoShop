@@ -43,7 +43,7 @@
       <!-- Nav Item - Dashboard -->
       <li class="nav-item">
       <!--判断该用户是否注册过店铺-->
-        {% if is_store %}
+        {% if request.COOKIES.has_store %}
             <a class="nav-link" href="/Store/index/">
               <i class="fas fa-fw fa-tachometer-alt"></i>
               <span>店铺管理</span>
@@ -59,6 +59,8 @@
       <!-- Divider -->
       <hr class="sidebar-divider">
 
+    <!--如果有店铺 才显示管理-->
+    {% if request.COOKIES.has_store %}
       <!-- Heading -->
       <div class="sidebar-heading">
         销售管理
@@ -75,10 +77,11 @@
             <h6 class="collapse-header">商品管理:</h6>
             <a class="collapse-item" href="/Store/add_goods">添加商品</a>
             <a class="collapse-item" href="/Store/list_goods">商品列表</a>
-            <a class="collapse-item" href="cards.html">商品详情</a>
+{#            <a class="collapse-item" href="cards.html">商品详情</a>#}
           </div>
         </div>
       </li>
+    {% endif %}
     </ul>
     <!-- End of Sidebar -->
 
@@ -318,7 +321,7 @@
         <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
         <div class="modal-footer">
           <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="/Store/login/">Logout</a>
+          <a class="btn btn-primary" href="/Store/logout/">Logout</a>
         </div>
       </div>
     </div>

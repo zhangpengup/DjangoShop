@@ -15,4 +15,6 @@ urlpatterns = [
 
 
     re_path('^$',index),
+    re_path(r'^goods/(?P<goods_id>\d+)',goods),
+    re_path(r'update_goods/(?P<goods_id>\d+)',update_goods),
 ]
