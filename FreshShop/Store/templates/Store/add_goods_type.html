@@ -1,0 +1,87 @@
+{% extends "Store/base.html" %}
+
+{% block title %}
+    商品类型页
+{% endblock %}
+
+{% block label %}
+    <button class="btn btn-warning" data-toggle="modal" data-target="#myModal">添加商品类型</button>
+{% endblock %}
+
+{% block content %}
+    <!--模态框-->
+    <div class="modal fade" id="myModal" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">添加类型</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <form method="post" class="form" enctype="multipart/form-data">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" class="form-control form-control-user" placeholder="类型名称" name="name">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control form-control-user" placeholder="类型描述" name="description">
+                    </div>
+                    <div class="form-group">
+                        <input type="file" class="form-control form-control-user" placeholder="类型图片" name="image">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">保存类型</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+    <!--商品类型列表-->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>类型名称</th>
+                <th>类型描述</th>
+                <th>类型图片</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for goods_type in goods_type_list %}
+                <tr>
+                    <td>{{ goods_type.type_name }}</td>
+                    <td>{{ goods_type.type_description }}</td>
+                    <td><img style="height: 200px;width: 200px;" src="/static/{{ goods_type.type_image }}" alt="未找到图片"></td>
+                    <td>
+                        <a href="/Store/set_goods_type/?id={{ goods.id }}" class="btn btn-danger">修改</a>
+
+                        <a href="/Store/set_goods_type/?id={{ goods.id }}" class="btn btn-primary">删除</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

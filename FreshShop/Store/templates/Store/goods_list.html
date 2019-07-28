@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block label %}
-    <a href="/Store/add_goods/" class="btn btn-warning">添加商品</a>
+    <a href="/Store/ag/" class="btn btn-warning">添加商品</a>
 {% endblock %}
 
 {% block content %}
@@ -31,8 +31,12 @@
                     <td>{{ goods.goods_date|date:"Y-m-d" }}</td>
                     <td>{{ goods.goods_safeDate }}</td>
                     <td>
-                        <a href="#" class="btn btn-danger">下架</a>
-                        <a href="#" class="btn btn-primary">销毁</a>
+                        {% ifequal state "up" %}
+                        <a href="/Store/set_goods/down/?id={{ goods.id }}" class="btn btn-danger">下架</a>
+                        {% else %}
+                        <a href="/Store/set_goods/up/?id={{ goods.id }}" class="btn btn-danger">上架</a>
+                        {% endifequal %}
+                        <a href="/Store/set_goods/delete/?id={{ goods.id }}" class="btn btn-primary">销毁</a>
                     </td>
                 </tr>
             {% endfor %}

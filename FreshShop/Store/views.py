@@ -116,8 +116,8 @@ def index(request):
 def logout(request):
     response = HttpResponseRedirect("/Store/login/")
     # 清除所有cookies
-    response.delete_cookie("username")
-    response.delete_cookie("has_store")
+    for key in request.COOKIES:  # 获取当前所有cookie
+        response.delete_cookie(key)
     return response
 
 
@@ -166,6 +166,7 @@ def register_store(request):
 # 添加商品
 @LoginValid
 def add_goods(request):
+    goods_type_list = GoodsType.objects.all()
     if request.method == "POST":
         goods_name = request.POST.get("goods_name")
         goods_price = request.POST.get("goods_price")
@@ -173,9 +174,11 @@ def add_goods(request):
         goods_description = request.POST.get("goods_description")
         goods_date = request.POST.get("goods_date")
         goods_safeDate = request.POST.get("goods_safeDate")
-        goods_store = request.POST.get("goods_store")
+        goods_type = request.POST.get("goods_type")
         # 注意：图片要用request.FILES
         goods_image = request.FILES.get("goods_image")
+        # 使用cookie当中的店铺id
+        goods_store = request.COOKIES.get("has_store")
         # 开始保存数据
         goods = Goods()
         goods.goods_name = goods_name
@@ -184,21 +187,25 @@ def add_goods(request):
         goods.goods_description = goods_description
         goods.goods_date = goods_date
         goods.goods_safeDate = goods_safeDate
-        goods.goods_store = goods_store
         goods.goods_image = goods_image
+        # 保存外键（多对一关系）
+        goods.goods_type = GoodsType.objects.get(id=int(goods_type))
         goods.save()
         # 保存多对多数据
         goods.store_id.add(
             Store.objects.get(id = int(goods_store))
         )
-        return HttpResponseRedirect("/Store/list_goods/")
-    return render(request,"Store/add_goods.html")
+        return HttpResponseRedirect("/Store/list_goods/up/")
+    return render(request,"Store/add_goods.html",locals())
 
 # 商品列表
 @LoginValid
-def list_goods(request):
-    # url来源(上一个地址)
-    # referer = request.META.get("HTTP_REFERER")
+def list_goods(request,state):
+    # 判断商品状态,1代表待售，0代表下架商品
+    if state == "up":
+        state_num = 1
+    else:
+        state_num = 0
 
     # 完成模糊查询
     keywords = request.GET.get("keywords","")  # 查询关键字
@@ -212,11 +219,11 @@ def list_goods(request):
     if keywords:
         # goods_list = Goods.objects.filter(goods_name__contains=keywords)
         # store表中没有多对多关系 用goods_set方法反查；
-        goods_list = store.goods_set.filter(goods_name__contains=keywords)
+        goods_list = store.goods_set.filter(goods_name__contains=keywords,goods_state=state_num)
     # 如果没有搜索关键字，返回所有商品
     else:
         # goods_list = Goods.objects.all()
-        goods_list = store.goods_set.all()
+        goods_list = store.goods_set.filter(goods_state=state_num)
 
 
     # 完成分页查询
@@ -273,6 +280,47 @@ def update_goods(request,goods_id):
         goods.save()
         return HttpResponseRedirect("/Store/goods/%s"%goods_id)
     return render(request,"Store/update_goods.html",locals())
+
+
+# 上下架、销毁
+def set_goods(request,state):
+    if state == "up":
+        state_num = 1
+    else:
+        state_num = 0
+    id = request.GET.get("id")
+    referer = request.META.get("HTTP_REFERER")
+    if id:
+        goods = Goods.objects.filter(id=id).first()
+        if state == "delete":  # 销毁商品
+            goods.delete()
+        else:
+            goods.goods_state = state_num  # 修改状态
+            goods.save()
+    # 跳转到请求来源页
+    return HttpResponseRedirect(referer)
+
+# 添加与展示商品类型
+def add_goods_type(request):
+    goods_type_list = GoodsType.objects.all()
+    if request.method == "POST":
+        name = request.POST.get("name")
+        description = request.POST.get("description")
+        image = request.FILES.get("image")
+        goodstype = GoodsType()
+        goodstype.type_name = name
+        goodstype.type_description = description
+        goodstype.type_image = image
+        goodstype.save()
+        return HttpResponseRedirect("/Store/agt/")
+
+    return render(request,"Store/add_goods_type.html",locals())
+
+
+
+
+
+
 
 
 

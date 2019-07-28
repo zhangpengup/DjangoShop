@@ -15,11 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls import re_path
 from django.urls import include
+from Buyer.views import index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('Store/',include('Store.urls')),
+    path('Buyer/',include('Buyer.urls')),
     path('ckeditor/',include('ckeditor_uploader.urls'))
+]
+
+urlpatterns += [
+    re_path(r'^$',index)
 ]

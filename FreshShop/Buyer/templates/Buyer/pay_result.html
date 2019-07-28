@@ -1,0 +1,22 @@
+{% extends "Buyer/base.html" %}
+
+{% block title %}
+    支付结果
+{% endblock %}
+
+{% block content %}
+    <h1 style="font-size: 36px"><strong>恭喜您，支付成功！</strong></h1>
+    <p class="order_msg">支付订单：{{ request.GET.out_trade_no }}</p>
+    <p class="order_msg">支付金额：{{ request.GET.total_amount }}</p>
+    <p class="order_msg">支付时间：{{ request.GET.timestamp }}</p>
+
+{% endblock %}
+
+{% block style %}
+    <style>
+        .order_msg{
+            font-size: 24px;
+            font-family: 微软雅黑;
+        }
+    </style>
+{% endblock %}

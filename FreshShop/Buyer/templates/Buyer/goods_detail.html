@@ -1,0 +1,175 @@
+{% extends "Buyer/base.html" %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="/static/Buyer/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="/static/Buyer/css/main.css">
+{% endblock %}
+
+{% block content %}
+
+
+	<div class="goods_detail_con clearfix">
+        <input type="hidden" id="goods_id" value="{{ goods.id }}">
+
+		<div class="goods_detail_pic fl"><img src="/static/{{ goods.goods_image }}" style="width: 350px; height: 350px"></div>
+
+		<div class="goods_detail_list fr">
+			<h3>{{ goods.goods_name }}</h3>
+			<p>{{ goods.goods_description|safe }}</p>
+			<div class="prize_bar">
+				<span class="show_pirze">¥<em>{{ goods.goods_price }}</em></span>
+				<span class="show_unit">单  位：500g</span>
+			</div>
+			<div class="goods_num clearfix">
+				<div class="num_name fl">数 量：</div>
+				<div class="num_add fl">
+					<input type="text" id="num_show" class="num_show fl" value="1">
+                    <button id="add_num" class="add fr" style="height: 25px">+</button>
+                    <button id="minus_num" class="minus fr" style="height: 25px">-</button>
+{#					<a href="javascript:;" id="dec_num" class="minus fr">-</a>#}
+				</div>
+			</div>
+			<div class="total" id="total">总价：<em>{{ goods.goods_price }}元</em></div>
+			<div class="operate_btn">
+				<a href="/Buyer/pay_order/?money={{ goods.goods_price }}&order_id=1000{{ goods.id }}" class="buy_btn">立即购买</a>
+				<a href="javascript:;" class="add_cart" id="add_cart">加入购物车</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="main_wrap clearfix">
+		<div class="l_wrap fl clearfix">
+			<div class="new_goods">
+				<h3>新品推荐</h3>
+				<ul>
+					<li>
+						<a href="#"><img src="/static/Buyer/images/goods/goods001.jpg"></a>
+						<h4><a href="#">进口柠檬</a></h4>
+						<div class="prize">￥3.90</div>
+					</li>
+					<li>
+						<a href="#"><img src="/static/Buyer/images/goods/goods002.jpg"></a>
+						<h4><a href="#">玫瑰香葡萄</a></h4>
+						<div class="prize">￥16.80</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="r_wrap fr clearfix">
+			<ul class="detail_tab clearfix">
+				<li class="active">商品介绍</li>
+				<li>评论</li>
+			</ul>
+
+			<div class="tab_content">
+				<dl>
+					<dt>商品详情：</dt>
+					<dd>老张大饼店位于北京朝阳区 王四营镇豆各庄村 ，每年1月-6月面向北京以及周围城市提供新鲜大饼和精品礼盒装大饼，面饼品种多样丰富，个大香甜。所有大饼均严格按照有机标准烘焙，不使用任何色素和食品添加剂。大饼在购买之后免洗可以直接食用。欢迎喜欢面食的市民前来选购，也欢迎各大单位选购精品大饼礼盒，大饼礼盒是亲朋馈赠、福利送礼的最佳选择。 </dd>
+				</dl>
+			</div>
+
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block script %}
+
+	<script type="text/javascript" src="/static/Buyer/js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript">
+        $("#add_num").click(
+            function () {
+                var goods_id = $("#goods_id").val();
+                var current_num = $("#num_show").val();
+                var url = "/Buyer/agn/?goods_id="+goods_id+"&current_num="+current_num+"&method=add";
+                $.ajax(
+                    {
+                        url: url,
+                        type: "get",
+                        data: "",
+                        success:function (data) {
+                            console.log(data);
+                            $("#num_show").val(data.total_num);
+                            $("#total").text("总价："+data.total_money+"元");
+                            console.log(data.total_money)
+                        },
+                        error:function (error) {
+                            console.log("error")
+                        }
+                    }
+                )
+            }
+        );
+        $("#minus_num").click(
+            function () {
+                var goods_id = $("#goods_id").val();
+                var current_num = $("#num_show").val();
+                var url = "/Buyer/agn/?goods_id="+goods_id+"&current_num="+current_num+"&method=minus";
+                $.ajax(
+                    {
+                        url: url,
+                        type: "get",
+                        data: "",
+                        success:function (data) {
+                            console.log(data);
+                            $("#num_show").val(data.total_num);
+                            $("#total").text("总价："+data.total_money+"元");
+                            console.log(data.total_money)
+                        },
+                        error:function (error) {
+                            console.log("error")
+                        }
+                    }
+                )
+            }
+        );
+        $("#num_show").blur(
+            function () {
+                var goods_id = $("#goods_id").val();
+                var current_num = $("#num_show").val();
+                var url = "/Buyer/agn/?goods_id="+goods_id+"&current_num="+current_num+"&method=bulr";
+                $.ajax(
+                    {
+                        url: url,
+                        type: "get",
+                        data: "",
+                        success:function (data) {
+                            console.log(data);
+                            $("#num_show").val(data.total_num);
+                            $("#total").text("总价："+data.total_money+"元");
+                            console.log(data.total_num)
+                        },
+                        error:function (error) {
+                            console.log("error")
+                        }
+                    }
+                )
+            }
+        )
+
+    </script>
+
+<!--
+	<script type="text/javascript">
+		var $add_x = $('#add_cart').offset().top;
+		var $add_y = $('#add_cart').offset().left;
+
+		var $to_x = $('#show_count').offset().top;
+		var $to_y = $('#show_count').offset().left;
+
+		$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'});
+		$('#add_cart').click(function(){
+			$(".add_jump").stop().animate({
+				'left': $to_y+7,
+				'top': $to_x+7},
+				"fast", function() {
+					$(".add_jump").fadeOut('fast',function(){
+						$('#show_count').html(2);
+					});
+
+			});
+		})
+	</script>
+-->
+{% endblock %}
